@@ -64,6 +64,7 @@ function App() {
         value={targetDateTime}
         onChange={handleDateTimeChange}
         min={new Date().toISOString().split('.')[0]} // Current datetime as min
+        step="1" // Set step to 1 to remove seconds from the picker
       />
       {timerRunning ? (
         <>
@@ -77,6 +78,9 @@ function App() {
         </>
       ) : (
         <button onClick={handleStartTimer}>Start Timer</button>
+      )}
+      {(!timerRunning && countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0) && (
+        <div>The Countdown is Over</div>
       )}
       {errorMessage && <div className="error">{errorMessage}</div>}
     </div>
