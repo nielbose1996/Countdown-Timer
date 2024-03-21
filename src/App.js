@@ -3,7 +3,7 @@ import './App.css';
 
 function App() {
   const [targetDateTime, setTargetDateTime] = useState('');
-  const [countdown, setCountdown] = useState({});
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [timerRunning, setTimerRunning] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -12,7 +12,7 @@ function App() {
     if (timerRunning) {
       interval = setInterval(() => {
         const now = new Date().getTime();
-        const distance = targetDateTime - now;
+        const distance = new Date(targetDateTime).getTime() - now;
 
         if (distance <= 0) {
           clearInterval(interval);
@@ -48,7 +48,7 @@ function App() {
 
   const handleCancelTimer = () => {
     setTimerRunning(false);
-    setCountdown({});
+    setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     setErrorMessage('');
   };
 
@@ -65,17 +65,20 @@ function App() {
         onChange={handleDateTimeChange}
         min={new Date().toISOString().split('.')[0]} // Current datetime as min
       />
-      <button onClick={handleStartTimer}>Start Timer</button>
-      {errorMessage && <div className="error">{errorMessage}</div>}
-      {timerRunning && (
-        <div className="countdown">
-          <div>{countdown.days} days</div>
-          <div>{countdown.hours} hours</div>
-          <div>{countdown.minutes} minutes</div>
-          <div>{countdown.seconds} seconds</div>
+      {timerRunning ? (
+        <>
+          <div className="countdown">
+            <div>{countdown.days} days</div>
+            <div>{countdown.hours} hours</div>
+            <div>{countdown.minutes} minutes</div>
+            <div>{countdown.seconds} seconds</div>
+          </div>
           <button onClick={handleCancelTimer}>Cancel Timer</button>
-        </div>
+        </>
+      ) : (
+        <button onClick={handleStartTimer}>Start Timer</button>
       )}
+      {errorMessage && <div className="error">{errorMessage}</div>}
     </div>
   );
 }
