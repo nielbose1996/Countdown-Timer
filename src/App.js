@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import notificationSound from '../public/abcad.wav'; 
+import notificationSound from './abcad.wav'; 
 
 function App() {
   const [targetDateTime, setTargetDateTime] = useState('');
