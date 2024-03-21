@@ -6,6 +6,7 @@ function App() {
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [timerRunning, setTimerRunning] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedTimeError, setSelectedTimeError] = useState('');
 
   useEffect(() => {
     let interval;
@@ -42,19 +43,15 @@ function App() {
 
     const selectedDateTime = new Date(targetDateTime).getTime();
     const currentDateTime = new Date().getTime();
+    const daysDifference = Math.floor((selectedDateTime - currentDateTime) / (1000 * 60 * 60 * 24));
 
-    if (selectedDateTime <= currentDateTime) {
-      setErrorMessage('Please select a future date and time.');
-      return;
-    }
-
-    const distance = new Date(targetDateTime).getTime() - currentDateTime;
-    if (distance > 100 * 24 * 60 * 60 * 1000) {
-      setErrorMessage('Selected time is more than 100 days.');
+    if (daysDifference > 100) {
+      setSelectedTimeError('Selected time is more than 100 days.');
       return;
     }
 
     setErrorMessage('');
+    setSelectedTimeError('');
     setTimerRunning(true);
   };
 
@@ -62,6 +59,7 @@ function App() {
     setTimerRunning(false);
     setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     setErrorMessage('');
+    setSelectedTimeError('');
   };
 
   const handleDateTimeChange = (e) => {
@@ -78,18 +76,12 @@ function App() {
         min={new Date().toISOString().split('.')[0]} // Current datetime as min
         step="1" // Set step to 1 to remove seconds from the picker
       />
-      {timerRunning ? (
-        <>
-          <div className="countdown">
-            <div>{countdown.days} days</div>
-            <div>{countdown.hours} hours</div>
-            <div>{countdown.minutes} minutes</div>
-            <div>{countdown.seconds} seconds</div>
-          </div>
-          <button onClick={handleCancelTimer}>Cancel Timer</button>
-        </>
-      ) : (
-        <button onClick={handleStartTimer}>Start Timer</button>
+      <button onClick={handleStartTimer} disabled={timerRunning || !targetDateTime}>
+        {timerRunning ? 'Timer Running' : 'Start Timer'}
+      </button>
+      {selectedTimeError && <div className="error">{selectedTimeError}</div>}
+      {(!timerRunning && countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0) && (
+        <div>The Countdown is Over</div>
       )}
       {errorMessage && <div className="error">{errorMessage}</div>}
     </div>
