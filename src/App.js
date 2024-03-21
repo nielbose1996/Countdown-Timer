@@ -5,8 +5,8 @@ function App() {
   const [targetDateTime, setTargetDateTime] = useState('');
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [timerRunning, setTimerRunning] = useState(false);
+  const [countdownOver, setCountdownOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [selectedTimeError, setSelectedTimeError] = useState('');
 
   useEffect(() => {
     let interval;
@@ -19,6 +19,7 @@ function App() {
           clearInterval(interval);
           setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
           setTimerRunning(false);
+          setCountdownOver(true); // Set countdownOver to true when the countdown ends
         } else {
           const days = Math.floor(distance / (1000 * 60 * 60 * 24));
           const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -43,15 +44,19 @@ function App() {
 
     const selectedDateTime = new Date(targetDateTime).getTime();
     const currentDateTime = new Date().getTime();
-    const daysDifference = Math.floor((selectedDateTime - currentDateTime) / (1000 * 60 * 60 * 24));
 
-    if (daysDifference > 100) {
-      setSelectedTimeError('Selected time is more than 100 days.');
+    if (selectedDateTime <= currentDateTime) {
+      setErrorMessage('Please select a future date and time.');
+      return;
+    }
+
+    const distance = selectedDateTime - currentDateTime;
+    if (distance > 100 * 24 * 60 * 60 * 1000) {
+      setErrorMessage('Selected time is more than 100 days.');
       return;
     }
 
     setErrorMessage('');
-    setSelectedTimeError('');
     setTimerRunning(true);
   };
 
@@ -59,7 +64,7 @@ function App() {
     setTimerRunning(false);
     setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     setErrorMessage('');
-    setSelectedTimeError('');
+    setCountdownOver(false); // Reset countdownOver when the timer is cancelled
   };
 
   const handleDateTimeChange = (e) => {
@@ -76,11 +81,22 @@ function App() {
         min={new Date().toISOString().split('.')[0]} // Current datetime as min
         step="1" // Set step to 1 to remove seconds from the picker
       />
-      <button onClick={handleStartTimer} disabled={timerRunning || !targetDateTime}>
-        {timerRunning ? 'Timer Running' : 'Start Timer'}
-      </button>
-      {selectedTimeError && <div className="error">{selectedTimeError}</div>}
-      {(!timerRunning && countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0) && (
+      {timerRunning ? (
+        <>
+          <div className="countdown">
+            <div>{countdown.days} days</div>
+            <div>{countdown.hours} hours</div>
+            <div>{countdown.minutes} minutes</div>
+            <div>{countdown.seconds} seconds</div>
+          </div>
+          <button onClick={handleCancelTimer}>Cancel Timer</button>
+        </>
+      ) : (
+        <button onClick={handleStartTimer} disabled={!targetDateTime}>
+          Start Timer
+        </button>
+      )}
+      {countdownOver && (
         <div>The Countdown is Over</div>
       )}
       {errorMessage && <div className="error">{errorMessage}</div>}
