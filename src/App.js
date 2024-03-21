@@ -8,6 +8,19 @@ function App() {
   const [countdownOver, setCountdownOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Check if there's a stored target date and time in localStorage on initial load
+  useEffect(() => {
+    const storedDateTime = localStorage.getItem('targetDateTime');
+    if (storedDateTime) {
+      setTargetDateTime(storedDateTime);
+    }
+  }, []);
+
+  // Save the target date and time to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('targetDateTime', targetDateTime);
+  }, [targetDateTime]);
+
   useEffect(() => {
     let interval;
     if (timerRunning) {
@@ -37,7 +50,6 @@ function App() {
   }, [timerRunning, targetDateTime]);
 
   const handleStartTimer = () => {
-    setCountdownOver(false);
     if (!targetDateTime) {
       setErrorMessage('Please select a date and time.');
       return;
@@ -58,7 +70,7 @@ function App() {
     }
 
     setErrorMessage('');
-    
+    setCountdownOver(false);
     setTimerRunning(true);
   };
 
