@@ -35,15 +35,27 @@ function App() {
   }, [timerRunning, targetDateTime]);
 
   const handleStartTimer = () => {
+    if (!targetDateTime) {
+      setErrorMessage('Please select a date and time.');
+      return;
+    }
+
     const selectedDateTime = new Date(targetDateTime).getTime();
     const currentDateTime = new Date().getTime();
 
     if (selectedDateTime <= currentDateTime) {
       setErrorMessage('Please select a future date and time.');
-    } else {
-      setErrorMessage('');
-      setTimerRunning(true);
+      return;
     }
+
+    const distance = new Date(targetDateTime).getTime() - currentDateTime;
+    if (distance > 100 * 24 * 60 * 60 * 1000) {
+      setErrorMessage('Selected time is more than 100 days.');
+      return;
+    }
+
+    setErrorMessage('');
+    setTimerRunning(true);
   };
 
   const handleCancelTimer = () => {
@@ -78,9 +90,6 @@ function App() {
         </>
       ) : (
         <button onClick={handleStartTimer}>Start Timer</button>
-      )}
-      {(!timerRunning && countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0) && (
-        <div>The Countdown is Over</div>
       )}
       {errorMessage && <div className="error">{errorMessage}</div>}
     </div>
