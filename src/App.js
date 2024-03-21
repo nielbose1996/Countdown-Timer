@@ -83,17 +83,27 @@ function App() {
           min={new Date().toISOString().split('.')[0]} // Current datetime as min
           step="1" // Set step to 1 to remove seconds from the picker
         />
-        <button className="start-button" onClick={handleStartTimer} disabled={!targetDateTime}>
-          Start Timer
-        </button>
+        {!timerRunning ? (
+          <button className="start-button" onClick={handleStartTimer} disabled={!targetDateTime}>
+            Start Timer
+          </button>
+        ) : null}
       </div>
       {timerRunning ? (
         <div className="countdown-container">
           <div className="countdown">
-            <div className="countdown-item">{countdown.days} days</div>
-            <div className="countdown-item">{countdown.hours} hours</div>
-            <div className="countdown-item">{countdown.minutes} minutes</div>
-            <div className="countdown-item">{countdown.seconds} seconds</div>
+            <div className="countdown-item">
+              <span className="countdown-value">{countdown.days}</span> days
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-value">{countdown.hours}</span> hours
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-value">{countdown.minutes}</span> minutes
+            </div>
+            <div className="countdown-item">
+              <span className="countdown-value">{countdown.seconds}</span> seconds
+            </div>
           </div>
           <button className="cancel-button" onClick={handleCancelTimer}>Cancel Timer</button>
         </div>
