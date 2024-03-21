@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import notificationSound from './abcad.wav'; 
+import './App.css';
+import notificationSound from './abcad.wav';
 
 function App() {
   const [targetDateTime, setTargetDateTime] = useState('');
@@ -8,6 +9,7 @@ function App() {
   const [countdownOver, setCountdownOver] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Check if there's a stored target date and time in localStorage on initial load
   useEffect(() => {
     const storedDateTime = localStorage.getItem('targetDateTime');
     if (storedDateTime) {
@@ -15,6 +17,7 @@ function App() {
     }
   }, []);
 
+  // Save the target date and time to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('targetDateTime', targetDateTime);
   }, [targetDateTime]);
@@ -31,7 +34,7 @@ function App() {
           setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
           setTimerRunning(false);
           setCountdownOver(true);
-          playNotificationSound(); // Play notification sound when countdown ends
+          playNotificationSound();
         } else {
           const days = Math.floor(distance / (1000 * 60 * 60 * 24));
           const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -75,6 +78,7 @@ function App() {
     }
 
     setErrorMessage('');
+    
     setTimerRunning(true);
   };
 
