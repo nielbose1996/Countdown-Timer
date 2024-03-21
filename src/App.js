@@ -19,7 +19,7 @@ function App() {
           clearInterval(interval);
           setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
           setTimerRunning(false);
-          setCountdownOver(true); // Set countdownOver to true when the countdown ends
+          setCountdownOver(true);
         } else {
           const days = Math.floor(distance / (1000 * 60 * 60 * 24));
           const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -57,6 +57,7 @@ function App() {
     }
 
     setErrorMessage('');
+    setCountdownOver(false); // Reset countdownOver when the timer starts
     setTimerRunning(true);
   };
 
@@ -64,7 +65,6 @@ function App() {
     setTimerRunning(false);
     setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     setErrorMessage('');
-    setCountdownOver(false); // Reset countdownOver when the timer is cancelled
   };
 
   const handleDateTimeChange = (e) => {
@@ -96,7 +96,7 @@ function App() {
           Start Timer
         </button>
       )}
-      {countdownOver && (
+      {countdownOver && !timerRunning && (
         <div>The Countdown is Over</div>
       )}
       {errorMessage && <div className="error">{errorMessage}</div>}
