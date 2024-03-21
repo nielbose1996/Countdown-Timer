@@ -37,6 +37,7 @@ function App() {
   }, [timerRunning, targetDateTime]);
 
   const handleStartTimer = () => {
+    setCountdownOver(false);
     if (!targetDateTime) {
       setErrorMessage('Please select a date and time.');
       return;
@@ -57,7 +58,7 @@ function App() {
     }
 
     setErrorMessage('');
-    setCountdownOver(false);
+
     setTimerRunning(true);
   };
 
@@ -65,7 +66,6 @@ function App() {
     setTimerRunning(false);
     setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     setErrorMessage('');
-    setCountdownOver(true);
   };
 
   const handleDateTimeChange = (e) => {
