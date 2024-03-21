@@ -58,7 +58,7 @@ function App() {
     }
 
     setErrorMessage('');
-
+    
     setTimerRunning(true);
   };
 
@@ -74,31 +74,32 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Countdown Timer</h1>
-      <input
-        type="datetime-local"
-        value={targetDateTime}
-        onChange={handleDateTimeChange}
-        min={new Date().toISOString().split('.')[0]} // Current datetime as min
-        step="1" // Set step to 1 to remove seconds from the picker
-      />
-      {timerRunning ? (
-        <>
-          <div className="countdown">
-            <div>{countdown.days} days</div>
-            <div>{countdown.hours} hours</div>
-            <div>{countdown.minutes} minutes</div>
-            <div>{countdown.seconds} seconds</div>
-          </div>
-          <button onClick={handleCancelTimer}>Cancel Timer</button>
-        </>
-      ) : (
-        <button onClick={handleStartTimer} disabled={!targetDateTime}>
+      <h1 className="title">Countdown Timer</h1>
+      <div className="input-container">
+        <input
+          type="datetime-local"
+          value={targetDateTime}
+          onChange={handleDateTimeChange}
+          min={new Date().toISOString().split('.')[0]} // Current datetime as min
+          step="1" // Set step to 1 to remove seconds from the picker
+        />
+        <button className="start-button" onClick={handleStartTimer} disabled={!targetDateTime}>
           Start Timer
         </button>
-      )}
+      </div>
+      {timerRunning ? (
+        <div className="countdown-container">
+          <div className="countdown">
+            <div className="countdown-item">{countdown.days} days</div>
+            <div className="countdown-item">{countdown.hours} hours</div>
+            <div className="countdown-item">{countdown.minutes} minutes</div>
+            <div className="countdown-item">{countdown.seconds} seconds</div>
+          </div>
+          <button className="cancel-button" onClick={handleCancelTimer}>Cancel Timer</button>
+        </div>
+      ) : null}
       {countdownOver && !timerRunning && (
-        <div>The Countdown is Over</div>
+        <div className="countdown-over">The Countdown is Over</div>
       )}
       {errorMessage && <div className="error">{errorMessage}</div>}
     </div>
